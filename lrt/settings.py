@@ -125,7 +125,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if (False):
+if (True):
     STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
     AWS_ACCESS_KEY_ID = 'AKIA2NK3YLFQRHAWEXNO'
