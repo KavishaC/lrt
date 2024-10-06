@@ -114,6 +114,21 @@ function initMap() {
     autocomplete(map);
 }
 
+// Helper function to calculate the rotated point
+function rotatePoint(center, point, angle) {
+    const angleRad = angle * (Math.PI / 180); // Convert angle to radians
+    const sinAngle = Math.sin(angleRad);
+    const cosAngle = Math.cos(angleRad);
+
+    const latDiff = point.lat - center.lat;
+    const lngDiff = point.lng - center.lng;
+
+    const newLat = center.lat + (latDiff * cosAngle - lngDiff * sinAngle);
+    const newLng = center.lng + (latDiff * sinAngle + lngDiff * cosAngle);
+
+    return { lat: newLat, lng: newLng };
+}
+
 // Function to add a custom marker with HTML label
 function addCustomMarker(map, point) {
     // Define a custom icon as a circle using SVG
@@ -132,6 +147,64 @@ function addCustomMarker(map, point) {
         map: map,
         icon: circleIcon, // Set the custom circle icon
     });
+
+    if (point.lines.includes("redL") || point.lines.includes("greenL") || point.lines.includes("purpleL")) {
+        const latLng = point.position; // Center position of the rectangle
+        const widthInDegrees = 0.00015; // Adjust the size of the rectangle (latitude difference)
+        const heightInDegrees = 0.0003; // Adjust the size of the rectangle (longitude difference)
+        let angle = 90;
+        if ("angle" in point) {
+            angle = point.angle; // Rotation angle in degrees
+        }
+        
+        // Calculate the four corners of the unrotated rectangle
+        const halfWidth = widthInDegrees / 2;
+        const halfHeight = heightInDegrees / 2;
+        
+        const corners = [
+            { lat: latLng.lat + halfHeight, lng: latLng.lng + halfWidth }, // Top-right
+            { lat: latLng.lat + halfHeight, lng: latLng.lng - halfWidth }, // Top-left
+            { lat: latLng.lat - halfHeight, lng: latLng.lng - halfWidth }, // Bottom-left
+            { lat: latLng.lat - halfHeight, lng: latLng.lng + halfWidth }, // Bottom-right
+        ];
+        
+        // Rotate each corner around the center point
+        const rotatedCorners = corners.map(corner => rotatePoint(latLng, corner, angle));
+        
+        // Create a polygon representing the rotated rectangle
+        const rectanglePolygon = new google.maps.Polygon({
+            paths: rotatedCorners,
+            map: map, // Your map instance
+            fillColor: '#FF0000', // Optional: Set the fill color
+            fillOpacity: 0.35, // Optional: Set the fill opacity
+            strokeColor: '#FF0000', // Optional: Set the stroke color
+            strokeOpacity: 0.8, // Optional: Set the stroke opacity
+            strokeWeight: 2, // Optional: Set the stroke width
+        });
+        const halfWidth2 = halfWidth / 2;
+
+        const corners2 = [
+            { lat: latLng.lat + halfHeight, lng: latLng.lng + halfWidth2 }, // Top-right
+            { lat: latLng.lat + halfHeight, lng: latLng.lng - halfWidth2 }, // Top-left
+            { lat: latLng.lat - halfHeight, lng: latLng.lng - halfWidth2 }, // Bottom-left
+            { lat: latLng.lat - halfHeight, lng: latLng.lng + halfWidth2 }, // Bottom-right
+        ];
+        
+        // Rotate each corner around the center point
+        const rotatedCorners2 = corners2.map(corner => rotatePoint(latLng, corner, angle));
+        
+        // Create a polygon representing the rotated rectangle
+        const rectanglePolygon2 = new google.maps.Polygon({
+            paths: rotatedCorners2,
+            map: map, // Your map instance
+            fillColor: '#FFFFFF', // Optional: Set the fill color
+            fillOpacity: 0.35, // Optional: Set the fill opacity
+            strokeColor: '#FF0000', // Optional: Set the stroke color
+            strokeOpacity: 0.8, // Optional: Set the stroke opacity
+            strokeWeight: 2, // Optional: Set the stroke width
+        });
+    }
+
     const markerDiv = document.createElement('div');
     markerDiv.className = 'custom-marker-label';
     //markerDiv.textContent = point.label; // Custom label text

@@ -119,27 +119,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AWS_ACCESS_KEY_ID = 'AKIA2NK3YLFQRHAWEXNO'
-AWS_SECRET_ACCESS_KEY = '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'
+if (False):
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
-AWS_STORAGE_BUCKET_NAME = 'myasdfasdfasdfbucket'
+    AWS_ACCESS_KEY_ID = 'AKIA2NK3YLFQRHAWEXNO'
+    AWS_SECRET_ACCESS_KEY = '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'
 
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    AWS_STORAGE_BUCKET_NAME = 'myasdfasdfasdfbucket'
 
-AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
-STORAGES = {
-    "default": {
-        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "storages.backends.s3boto3.S3StaticStorage"
+    AWS_S3_FILE_OVERWRITE = False
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3boto3.S3StaticStorage"
+        }
     }
-}
