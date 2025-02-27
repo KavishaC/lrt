@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import requests
 from math import sqrt
-API_KEY = 'AIzaSyDlV7k3oGYKJwY08OnLadcte-SZ1ywBv_A'
+API_KEY = ''
 from .data import d
 import queue
 
